@@ -28,6 +28,7 @@ const PlantersAndVases = () => {
       image: imageM1,
       originalPrice: 5000,
       discountedPrice: 250,
+      imageUrl: "QmT1Gor1Jnd4iboHThSED2fQwQj2QU9giPqxPM5rMo2HvD",
     },
     {
       id: "mercury-cone-vase",
@@ -35,6 +36,7 @@ const PlantersAndVases = () => {
       image: imageM2,
       originalPrice: 3200,
       discountedPrice: 250,
+      imageUrl: "Qmbz18bjynXio9XTwTaNmkrTZP4tb9x5xufk7BMzsxdQiT",
     },
   ];
 
@@ -86,7 +88,7 @@ const PlantersAndVases = () => {
             productId: product.id,
             name: product.name,
             price: Number(product.originalPrice),
-            image: `https://ipfs.io/ipfs/${product.image}`,
+            image: `https://ipfs.io/ipfs/${product.imageUrl}`,
             quantity: 1,
           });
         }
@@ -124,7 +126,7 @@ const PlantersAndVases = () => {
             productId: product.id,
             name: product.name,
             price: Number(product.originalPrice),
-            image: `https://ipfs.io/ipfs/${product.image}`,
+            image: `https://ipfs.io/ipfs/${product.imageUrl}`,
             quantity: 1,
           }),
         }
