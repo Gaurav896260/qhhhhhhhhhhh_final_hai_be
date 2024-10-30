@@ -29,6 +29,7 @@ const ObjectDecor = () => {
       image: image1,
       originalPrice: 1400,
       discountedPrice: 250,
+      imageUrl: "QmQsQfhocjAjHfoCdBQ5WnxdfqMPyc5KnZ3D2sS1FATkfV",
     },
   ];
 
@@ -80,7 +81,7 @@ const ObjectDecor = () => {
             productId: product.id,
             name: product.name,
             price: Number(product.originalPrice),
-            image: `https://ipfs.io/ipfs/${product.image}`,
+            image: `https://ipfs.io/ipfs/${product.imageUrl}`,
             quantity: 1,
           });
         }
@@ -118,7 +119,7 @@ const ObjectDecor = () => {
             productId: product.id,
             name: product.name,
             price: Number(product.originalPrice),
-            image: `https://ipfs.io/ipfs/${product.image}`,
+            image: `https://ipfs.io/ipfs/${product.imageUrl}`,
             quantity: 1,
           }),
         }
