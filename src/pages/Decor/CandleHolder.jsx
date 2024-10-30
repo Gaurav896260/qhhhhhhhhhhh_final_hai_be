@@ -35,6 +35,7 @@ const CandleHolder = () => {
       image: image11,
       originalPrice: 3200,
       discountedPrice: 250,
+      imageUrl: "QmbLUyR1qcqNq3kBMHdtPcqN1agYYCWdama9SJHRmJZimY",
     },
     {
       id: "starburst-lanterns",
@@ -42,6 +43,7 @@ const CandleHolder = () => {
       image: image22,
       originalPrice: 5000,
       discountedPrice: 250,
+      imageUrl: "QmVrRBQhHxq6m2jFFEd1bo3iFmt4kbnwHqQSVAxGSBXriB",
     },
 
     {
@@ -50,6 +52,7 @@ const CandleHolder = () => {
       image: image44,
       originalPrice: 4500,
       discountedPrice: 250,
+      imageUrl: "QmVuuPg5MaHwsd42rHx5NzdCptPwEZYofWebC4Nrti9Zar",
     },
     {
       id: "acacia-wood-candle-holders",
@@ -57,6 +60,7 @@ const CandleHolder = () => {
       image: image55,
       originalPrice: 3200,
       discountedPrice: 250,
+      imageUrl: "QmUP2ms5adiHJjAMnUMbD2EmAJKipXhyJKHX4SMVQNxYB6",
     },
     {
       id: "eris-marble-candle-holders",
@@ -64,6 +68,7 @@ const CandleHolder = () => {
       image: image66,
       originalPrice: 2500,
       discountedPrice: 250,
+      imageUrl: "Qmf4xXvqhVyLBViqDsf2d6cWLNHbK8zY8Z9hwDvdNHEbns",
     },
     {
       id: "psyche-candle-holders",
@@ -71,6 +76,7 @@ const CandleHolder = () => {
       image: image77,
       originalPrice: 5000,
       discountedPrice: 250,
+      imageUrl: "QmNeMyi1mLQrUkx73ME9djkhRvnJ7XbfsodoQzaoXYpPHY",
     },
   ];
 
