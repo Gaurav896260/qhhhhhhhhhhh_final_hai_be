@@ -32,6 +32,7 @@ const SideTable = () => {
       image: image1,
       originalPrice: 9500,
       discountedPrice: 250,
+      imageUrl: "QmVjPjG5MwPNKQnzmJNDLqFm1p97pkHRP7mTXdoJQ377qh",
     },
     {
       id: "orbit-side-table",
@@ -39,6 +40,7 @@ const SideTable = () => {
       image: image2,
       originalPrice: 7700,
       discountedPrice: 250,
+      imageUrl: "QmR5cMbGBzmfdpz2vNJJShczM8gD1WGCNJBbx97HoGT51X",
     },
     {
       id: "pluto-side-table",
@@ -46,6 +48,7 @@ const SideTable = () => {
       image: image3,
       originalPrice: 9500,
       discountedPrice: 250,
+      imageUrl: "QmY17stA75abbBxhBS3HcD3hagpro6G3dYRkcTFpfDAoNk",
     },
     {
       id: "vega-side-table",
@@ -53,6 +56,7 @@ const SideTable = () => {
       image: image4,
       originalPrice: 9500,
       discountedPrice: 250,
+      imageUrl: "QmTb4MvHpxX9gfwRQm7ev3qhWrn1bwrDUpjgH753BAsgJg",
     },
     {
       id: "acacia-wood-side-table",
@@ -60,6 +64,7 @@ const SideTable = () => {
       image: image5,
       originalPrice: 9500,
       discountedPrice: 250,
+      imageUrl: "QmSe2Kuy8SVNdyjSNFd1bjUeLLBfYeDDFShm23iS4ibfv2",
     },
     {
       id: "the-cosmic-mirror-side-table",
@@ -67,6 +72,7 @@ const SideTable = () => {
       image: image6,
       originalPrice: 25000,
       discountedPrice: 250,
+      imageUrl: "QmNxuwFLm3igQHVTkme2oXVS6USAZnQhj1KmAZpuo9ZkAN",
     },
   ];
 
@@ -120,7 +126,7 @@ const SideTable = () => {
             productId: product.id,
             name: product.name,
             price: Number(product.originalPrice),
-            image: `https://ipfs.io/ipfs/${product.image}`,
+            image: `https://ipfs.io/ipfs/${product.imageUrl}`,
             quantity: 1,
           });
         }
@@ -158,7 +164,7 @@ const SideTable = () => {
             productId: product.id,
             name: product.name,
             price: Number(product.originalPrice),
-            image: `https://ipfs.io/ipfs/${product.image}`,
+            image: `https://ipfs.io/ipfs/${product.imageUrl}`,
             quantity: 1,
           }),
         }
