@@ -34,6 +34,7 @@ const ServewareProduct = () => {
       image: s12,
       originalPrice: 950,
       discountedPrice: 250,
+      imageUrl: "QmTCMopBCRHGe9Act794xek44M9t3UD82YxmHf4zVdKSHC",
     },
     {
       id: "chopping-board-serveware",
@@ -41,6 +42,7 @@ const ServewareProduct = () => {
       image: s21,
       originalPrice: 3600,
       discountedPrice: 250,
+      imageUrl: "QmYfYqpqHbWB6oPCXsXHetrsr2tWUtE7SnmiJAvqwvnrqq",
     },
     {
       id: "cake-dome-serveware",
@@ -48,6 +50,7 @@ const ServewareProduct = () => {
       image: s34,
       originalPrice: 4500,
       discountedPrice: 250,
+      imageUrl: "QmYuEFGKQfGH7Gz1iuEtNxmjfFyRb1ggSXudhgcqJ8bsHj",
     },
     {
       id: "acacia-wood-bowl-i",
@@ -120,7 +123,7 @@ const ServewareProduct = () => {
             productId: product.id,
             name: product.name,
             price: Number(product.originalPrice),
-            image: `https://ipfs.io/ipfs/${product.image}`,
+            image: `https://ipfs.io/ipfs/${product.imageUrl}`,
             quantity: 1,
           });
         }
@@ -158,7 +161,7 @@ const ServewareProduct = () => {
             productId: product.id,
             name: product.name,
             price: Number(product.originalPrice),
-            image: `https://ipfs.io/ipfs/${product.image}`,
+            image: `https://ipfs.io/ipfs/${product.imageUrl}`,
             quantity: 1,
           }),
         }
