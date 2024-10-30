@@ -3,12 +3,67 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import Navbar from "../components/Navbar/Navbar.jsx";
 import Footer from "../components/Footer/Footer.jsx";
 import { FaTrashAlt, FaMinus, FaPlus } from "react-icons/fa";
+import { Loader2, ShoppingCart } from "lucide-react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import ConfirmationModal from "./ConfirmationModal";
 import { toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
-import { ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
+
+// Enhanced Modal Component with Loading State
+const ConfirmationModal = ({
+  isOpen,
+  onClose,
+  onConfirm,
+  message,
+  isLoading,
+}) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+      <div className="bg-white rounded-lg p-6 max-w-sm w-full m-4">
+        <h2 className="text-xl font-semibold mb-4">Confirm Action</h2>
+        <p className="text-gray-600 mb-6">{message}</p>
+        <div className="flex justify-end space-x-4">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+            disabled={isLoading}
+          >
+            Cancel
+          </button>
+          <button
+            onClick={onConfirm}
+            disabled={isLoading}
+            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors flex items-center space-x-2"
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="animate-spin h-4 w-4" />
+                <span>Removing...</span>
+              </>
+            ) : (
+              <span>Remove</span>
+            )}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Loading Screen Component
+const LoadingScreen = () => (
+  <div className="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center">
+    <div className="flex flex-col items-center justify-center space-y-4">
+      <Loader2 className="h-12 w-12 animate-spin text-black" />
+      <p className="text-lg font-semibold text-gray-800">
+        Loading your cart...
+      </p>
+    </div>
+  </div>
+);
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -18,6 +73,9 @@ const Cart = () => {
   const [itemToRemove, setItemToRemove] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState(null);
+  const [isRemoving, setIsRemoving] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isInitialized, setIsInitialized] = useState(false);
   const location = useLocation();
 
   const products = [
@@ -126,7 +184,7 @@ const Cart = () => {
     {
       id: "acacia-wood-bowl-i",
       name: "ACACIA WOOD BOWL-I",
-    
+
       originalPrice: 1400,
       discountedPrice: 250,
     },
@@ -147,14 +205,14 @@ const Cart = () => {
     {
       id: "acacia-wood-bowl-ii",
       name: "ACACIA WOOD BOWL-II",
-     
+
       originalPrice: 1400,
       discountedPrice: 250,
     },
     {
       id: "acacia-wood-bowl-serveware",
       name: "ACACIA WOOD BOWL",
-    
+
       originalPrice: 950,
       discountedPrice: 250,
     },
@@ -168,7 +226,7 @@ const Cart = () => {
     {
       id: "cake-dome-serveware",
       name: "CAKE DOME",
-      
+
       originalPrice: 4500,
       discountedPrice: 250,
     },
@@ -202,7 +260,6 @@ const Cart = () => {
       }
     }
   }, [location, navigate]);
-
   const fetchUserData = async () => {
     try {
       const response = await fetch(
@@ -228,16 +285,16 @@ const Cart = () => {
   };
 
   const fetchCart = async () => {
-    if (userInfo && userInfo.token) {
-      const userData = await fetchUserData();
-      if (!userData || !userData._id) {
-        setError("Failed to fetch user information.");
-        return;
-      }
+    try {
+      if (userInfo && userInfo.token) {
+        const userData = await fetchUserData();
+        if (!userData || !userData._id) {
+          setError("Failed to fetch user information.");
+          return;
+        }
 
-      const mongoUserId = userData._id;
+        const mongoUserId = userData._id;
 
-      try {
         const response = await fetch(
           `https://qdore-backend-final-final-last.vercel.app/api/cart/${mongoUserId}`,
           {
@@ -248,21 +305,60 @@ const Cart = () => {
             },
           }
         );
-        console.log("response", response);
+
         if (!response.ok) {
           throw new Error("Failed to fetch cart data");
         }
         const data = await response.json();
         setDbCart(data.products);
-      } catch (error) {
-      
-        setError("Error fetching cart: " + error.message);
       }
+
+      const savedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+      setLocalCart(savedCart);
+    } catch (error) {
+      setError("Error fetching cart: " + error.message);
+    }
+  };
+
+  useEffect(() => {
+    let timeoutId;
+
+    const initializeCart = async () => {
+      setIsLoading(true);
+      try {
+        await fetchCart();
+        // Ensure loading screen shows for at least 1 second to prevent flickering
+        timeoutId = setTimeout(() => {
+          setIsLoading(false);
+          setIsInitialized(true);
+        }, 1000);
+      } catch (error) {
+        console.error("Error initializing cart:", error);
+        setIsLoading(false);
+        setIsInitialized(true);
+      }
+    };
+
+    if (!isInitialized) {
+      initializeCart();
     }
 
-    const savedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
-    setLocalCart(savedCart);
-  };
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [isInitialized]);
+
+  useEffect(() => {
+    if (location.state && location.state.fromOTP) {
+      const tempCart = JSON.parse(localStorage.getItem("cartItems"));
+      if (tempCart) {
+        navigate("/orderAddress", { state: { cart: tempCart } });
+        localStorage.removeItem("cartItems");
+      }
+    }
+  }, [location, navigate]);
 
   useEffect(() => {
     AOS.init({
@@ -272,9 +368,7 @@ const Cart = () => {
       delay: 100,
     });
     AOS.refresh();
-
-    fetchCart();
-  }, [userInfo]);
+  }, []);
 
   const handleUpdateQuantity = async (productId, newQuantity, isDbCart) => {
     if (isDbCart) {
@@ -305,9 +399,7 @@ const Cart = () => {
           if (!response.ok) {
             throw new Error("Failed to update cart quantity");
           }
-          
         } catch (error) {
-          
           setError("Error updating cart: " + error.message);
         }
       }
@@ -324,83 +416,52 @@ const Cart = () => {
     const item = isDbCart
       ? dbCart.find((item) => item._id === productId)
       : localCart.find((item) => item.productId === productId);
-  
-    if (item) {
-      const toastId = toast.loading('Updating quantity...');
-  
-      try {
-        // Wait for the quantity update to complete
-        await handleUpdateQuantity(productId, item.quantity + 1, isDbCart);
-  
-        // Update the toast to show success
-        toast.update(toastId, {
-          render: 'Quantity increased successfully!',
-          type: toast.TYPE.SUCCESS,
-          isLoading: false,
-          autoClose: 2000,
-        });
-      } catch (error) {
-        // Show an error toast if something goes wrong
-        toast.update(toastId, {
-          render: `Failed to increase quantity: ${error.message}`,
-          type: toast.TYPE.ERROR,
-          isLoading: false,
-          autoClose: 3000,
-        });
-      }
-    }
+
+    try {
+      // Wait for the quantity update to complete
+      await handleUpdateQuantity(productId, item.quantity + 1, isDbCart);
+
+      // Update the toast to show success
+    } catch (error) {}
   };
-  
+
   const handleDecrease = async (productId, isDbCart) => {
     const item = isDbCart
       ? dbCart.find((item) => item._id === productId)
       : localCart.find((item) => item.productId === productId);
-  
-    if (item && item.quantity > 1) {
-      const toastId = toast.loading('Updating quantity...');
-  
-      try {
-        // Wait for the quantity update to complete
-        await handleUpdateQuantity(productId, item.quantity - 1, isDbCart);
-  
-        // Update the toast to show success
-        toast.update(toastId, {
-          render: 'Quantity decreased successfully!',
-          type: toast.TYPE.SUCCESS,
-          isLoading: false,
-          autoClose: 2000,
-        });
-      } catch (error) {
-        // Show an error toast if something goes wrong
-        toast.update(toastId, {
-          render: `Failed to decrease quantity: ${error.message}`,
-          type: toast.TYPE.ERROR,
-          isLoading: false,
-          autoClose: 3000,
-        });
-      }
-    } else if (item && item.quantity === 1) {
-      toast.warning('Minimum quantity is 1, cannot decrease further.', { autoClose: 2000 });
+
+    try {
+      // Wait for the quantity update to complete
+      await handleUpdateQuantity(productId, item.quantity - 1, isDbCart);
+
+      // Update the toast to show success
+      toast.update(toastId, {
+        render: "Quantity decreased successfully!",
+        type: toast.TYPE.SUCCESS,
+        isLoading: false,
+        autoClose: 2000,
+      });
+    } catch (error) {
+      // Show an error toast if something goes wrong
     }
   };
 
   const handleRemove = async () => {
+    setIsRemoving(true);
+    // const toastId = toast.loading("Removing item from cart...");
     const isDbItem = dbCart.some((item) => item._id === itemToRemove);
 
-    if (isDbItem) {
-      const updatedCart = dbCart.filter((item) => item._id !== itemToRemove);
-      setDbCart(updatedCart);
+    try {
+      if (isDbItem) {
+        const updatedCart = dbCart.filter((item) => item._id !== itemToRemove);
 
-      if (userInfo && userInfo.token) {
-        try {
+        if (userInfo && userInfo.token) {
           const userData = await fetchUserData();
           if (!userData || !userData._id) {
-            setError("Failed to fetch user information.");
-            return;
+            throw new Error("Failed to fetch user information.");
           }
 
           const mongoUserId = userData._id;
-
           const url = `https://qdore-backend-final-final-last.vercel.app/api/cart/${mongoUserId}/remove/${itemToRemove}`;
           const response = await fetch(url, {
             method: "DELETE",
@@ -415,20 +476,36 @@ const Cart = () => {
               `Network response was not ok: ${response.statusText}`
             );
           }
-        } catch (error) {
-          setError("Error removing item: " + error.message);
-        }
-      }
-    } else {
-      const updatedCart = localCart.filter(
-        (item) => item.productId !== itemToRemove
-      );
-      setLocalCart(updatedCart);
-      localStorage.setItem("cartItems", JSON.stringify(updatedCart));
-    }
 
-    setIsModalOpen(false);
-    setItemToRemove(null);
+          setDbCart(updatedCart);
+        }
+      } else {
+        const updatedCart = localCart.filter(
+          (item) => item.productId !== itemToRemove
+        );
+        setLocalCart(updatedCart);
+        localStorage.setItem("cartItems", JSON.stringify(updatedCart));
+      }
+
+      toast.update(toastId, {
+        render: "Item removed successfully!",
+        type: toast.TYPE.SUCCESS,
+        isLoading: false,
+        autoClose: 2000,
+      });
+    } catch (error) {
+      toast.update(toastId, {
+        render: `Failed to remove item: ${error.message}`,
+        type: toast.TYPE.ERROR,
+        isLoading: false,
+        autoClose: 3000,
+      });
+      setError("Error removing item: " + error.message);
+    } finally {
+      setIsRemoving(false);
+      setIsModalOpen(false);
+      setItemToRemove(null);
+    }
   };
   const saveLocalCartToDB = async (mongoUserId) => {
     const token = userInfo?.token;
@@ -462,7 +539,6 @@ const Cart = () => {
           throw new Error("Failed to add item to cart in database");
         }
       } catch (error) {
-        
         toast.error("Failed to add item to cart in database: " + error.message);
       }
     }
@@ -515,7 +591,7 @@ const Cart = () => {
             className="flex items-center bg-white p-6 rounded-lg shadow-md border border-gray-200"
           >
             <img
-              src={`https://ipfs.io/ipfs/${item.image}`}
+              src={item.image}
               alt={item.name}
               className="w-24 h-24 object-cover mr-6 rounded-md"
               onClick={() =>
@@ -573,6 +649,15 @@ const Cart = () => {
     </div>
   );
 
+  if (!isInitialized || isLoading) {
+    return (
+      <>
+        <Navbar />
+        <LoadingScreen />
+      </>
+    );
+  }
+
   return (
     <>
       <Navbar />
@@ -594,17 +679,9 @@ const Cart = () => {
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {userInfo && dbCart.length > 0 && (
-              <>
-                
-                {renderCartItems(dbCart, true)}
-              </>
+              <>{renderCartItems(dbCart, true)}</>
             )}
-            {localCart.length > 0 && (
-              <>
-                
-                {renderCartItems(localCart, false)}
-              </>
-            )}
+            {localCart.length > 0 && <>{renderCartItems(localCart, false)}</>}
             <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 h-fit">
               <h2 className="text-xl font-semibold mb-4 text-gray-900">
                 Order Summary
@@ -639,13 +716,15 @@ const Cart = () => {
           </div>
         )}
       </div>
-      
+
       <ConfirmationModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={handleRemove}
         message="Are you sure you want to remove this item from your cart?"
+        isLoading={isRemoving}
       />
+      <ToastContainer position="bottom-right" />
       <Footer />
     </>
   );

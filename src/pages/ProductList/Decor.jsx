@@ -23,13 +23,55 @@ const CandleHolder = () => {
   const userInfo = useSelector((state) => state.auth.userInfo);
 
   const products = [
-    { id: "classical-starburst-lanterns", name: "THE CLASSICAL STARBURST LANTERNS", image: image11, originalPrice: 3200, discountedPrice: 250 },
-    { id: "starburst-lanterns", name: "STARBURST LANTERNS", image: image22, originalPrice: 5000, discountedPrice: 250 },
-    { id: "solar-candle-hurricanes", name: "SOLAR CANDLE HURRICANES", image: image44, originalPrice: 4500, discountedPrice: 250 },
-    { id: "acacia-wood-candle-holders", name: "ACACIA WOOD CANDLE HOLDERS", image: image55, originalPrice: 3200, discountedPrice: 250 },
-    { id: "eris-marble-candle-holders", name: "ERIS MARBLE CANDLE HOLDERS", image: image66, originalPrice: 2500, discountedPrice: 250 },
-    { id: "psyche-candle-holders", name: "PSYCHE CANDLE HOLDERS", image: image77, originalPrice: 5000, discountedPrice: 250 },
-    { id: "the-globe", name: "THE GLOBE", image: image1, originalPrice: 1400, discountedPrice: 250 },
+    {
+      id: "classical-starburst-lanterns",
+      name: "THE CLASSICAL STARBURST LANTERNS",
+      image: image11,
+      originalPrice: 3200,
+      discountedPrice: 250,
+    },
+    {
+      id: "starburst-lanterns",
+      name: "STARBURST LANTERNS",
+      image: image22,
+      originalPrice: 5000,
+      discountedPrice: 250,
+    },
+    {
+      id: "solar-candle-hurricanes",
+      name: "SOLAR CANDLE HURRICANES",
+      image: image44,
+      originalPrice: 4500,
+      discountedPrice: 250,
+    },
+    {
+      id: "acacia-wood-candle-holders",
+      name: "ACACIA WOOD CANDLE HOLDERS",
+      image: image55,
+      originalPrice: 3200,
+      discountedPrice: 250,
+    },
+    {
+      id: "eris-marble-candle-holders",
+      name: "ERIS MARBLE CANDLE HOLDERS",
+      image: image66,
+      originalPrice: 2500,
+      discountedPrice: 250,
+    },
+    {
+      id: "psyche-candle-holders",
+      name: "PSYCHE CANDLE HOLDERS",
+      image: image77,
+      originalPrice: 5000,
+      discountedPrice: 250,
+    },
+    {
+      id: "the-globe",
+      name: "THE GLOBE",
+      image: image1,
+      originalPrice: 1400,
+      discountedPrice: 250,
+    },
   ];
 
   const navigate = useNavigate();
@@ -60,7 +102,7 @@ const CandleHolder = () => {
     }
   };
 
- const handleAddToCart = async (product) => {
+  const handleAddToCart = async (product) => {
     if (!userInfo) {
       // User is not logged in, save to local storage
       const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
@@ -75,11 +117,10 @@ const CandleHolder = () => {
           productId: product.id,
           name: product.name,
           price: Number(product.originalPrice),
-          image: product.image,
+          image: `https://ipfs.io/ipfs/${product.imageUrl}`,
           quantity: 1,
         });
       }
-
       localStorage.setItem("cartItems", JSON.stringify(cartItems));
       setActiveProduct(product);
       setModalVisible(true);
@@ -116,7 +157,7 @@ const CandleHolder = () => {
             productId: product.id,
             name: product.name,
             price: Number(product.originalPrice),
-            image: product.image,
+            image: `https://ipfs.io/ipfs/${product.imageUrl}`,
             quantity: 1,
           }),
         }
@@ -163,7 +204,9 @@ const CandleHolder = () => {
   return (
     <div className="bg-white dark:bg-gray-900 dark:text-white min-h-screen">
       <Navbar />
-      <h1 className="text-center text-2xl font-normal font-montserrat mt-4">HOME DECOR</h1>
+      <h1 className="text-center text-2xl font-normal font-montserrat mt-4">
+        HOME DECOR
+      </h1>
       <div className="container mx-auto px-5 py-10">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-10">
           {products.map((product) => (

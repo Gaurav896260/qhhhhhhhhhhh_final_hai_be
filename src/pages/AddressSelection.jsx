@@ -8,7 +8,7 @@ import OrderConfirmationModal from "./BuyNowmodal";
 import Footer from "../components/Footer/Footer";
 import Navbar from "../components/Navbar/Navbar";
 const AddressSelection = () => {
-  const userInfo = useSelector((state) => state.auth.userInfo);
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
   const navigate = useNavigate();
   const location = useLocation();
   const { orderData } = location.state || {};
@@ -132,15 +132,12 @@ const AddressSelection = () => {
           }),
         }
       );
-
       if (!response.ok) {
         const errorData = await response.text();
         console.error("Error saving address:", errorData);
         throw new Error("Failed to save address.");
       }
-
       const data = await response.json();
-
       if (!data.address) {
         console.error("No address returned from server.");
         throw new Error("No address returned from server.");
@@ -308,9 +305,8 @@ const AddressSelection = () => {
                 paymentId: response.razorpay_payment_id,
                 paymentMethod: "Online Payment",
               };
-
               const orderResponse = await fetch(
-                "https://qdore-backend-final-final-last.vercel.app/api/users/buynoworder",
+                "http://localhost:3000/api/users/buynoworder",
                 {
                   method: "POST",
                   headers: {
@@ -606,5 +602,4 @@ const AddressSelection = () => {
     </>
   );
 };
-
 export default AddressSelection;

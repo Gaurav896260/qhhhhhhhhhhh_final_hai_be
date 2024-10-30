@@ -19,7 +19,7 @@ import { productImages, products } from "./sideProductData.js";
 const SideTableProducts = () => {
   const { productId } = useParams();
   const navigate = useNavigate();
-  const userInfo = useSelector((state) => state.auth.userInfo);
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
   const [activeProduct, setActiveProduct] = useState(
     () => products.find((product) => product.id === productId) || products[0]
@@ -33,7 +33,7 @@ const SideTableProducts = () => {
   const [showCareInstructions, setShowCareInstructions] = useState(false);
   const [showShipping, setShowShipping] = useState(false);
   const [error, setError] = useState("");
-
+  const [isLoading, setIsLoading] = useState(false);
   const [showPopup, setShowPopup] = useState(false); // State to manage the popup visibility
   const [popupMessage, setPopupMessage] = useState(""); // State to manage the popup message
 
@@ -78,20 +78,24 @@ const SideTableProducts = () => {
       setError("Error fetching user data: " + error.message);
       return null;
     }
-  };
+  }; // Modify the handleAddToCart function
   const handleAddToCart = async () => {
-    if (userInfo) {
-      // User is logged in, save to database
-      const token = userInfo?.token;
+    if (isLoading) return; // Prevent multiple clicks while loading
 
+    setIsLoading(true); // Start loading
+
+    if (userInfo) {
+      const token = userInfo?.token;
       if (!token) {
         toast.error("Authentication token is missing.");
+        setIsLoading(false); // Reset loading state
         return;
       }
 
       const userData = await fetchUserData();
       if (!userData || !userData._id) {
         toast.error("Failed to fetch user information.");
+        setIsLoading(false); // Reset loading state
         return;
       }
 
@@ -111,7 +115,7 @@ const SideTableProducts = () => {
               productId: activeProduct.id,
               name: activeProduct.name,
               price: Number(activeProduct.price),
-              image: activeProduct.imageUrl,
+              image: `https://ipfs.io/ipfs/${activeProduct.imageUrl}`,
               quantity: amount,
             }),
           }
@@ -129,43 +133,49 @@ const SideTableProducts = () => {
         // Hide the popup after 3 seconds
         setTimeout(() => {
           setShowPopup(false);
-        }, 3000); // 3000 ms = 3 seconds
+        }, 3000);
       } catch (error) {
         console.error("Error adding to cart:", error);
         toast.error("An unexpected error occurred. Please try again later.");
+      } finally {
+        setIsLoading(false); // Reset loading state regardless of outcome
       }
     } else {
       // User is not logged in, save to local storage
-      const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
-      const existingItemIndex = cartItems.findIndex(
-        (item) => item.productId === activeProduct.id
-      );
+      try {
+        const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+        const existingItemIndex = cartItems.findIndex(
+          (item) => item.productId === activeProduct.id
+        );
 
-      if (existingItemIndex !== -1) {
-        // If the item already exists, update its quantity
-        cartItems[existingItemIndex].quantity += amount;
-      } else {
-        // If it's a new item, add it to the cart
-        cartItems.push({
-          productId: activeProduct.id,
-          name: activeProduct.name,
-          price: Number(activeProduct.price),
-          image: activeProduct.imageUrl,
-          quantity: amount,
-        });
+        if (existingItemIndex !== -1) {
+          cartItems[existingItemIndex].quantity += amount;
+        } else {
+          cartItems.push({
+            productId: activeProduct.id,
+            name: activeProduct.name,
+            price: Number(activeProduct.price),
+            image: `https://ipfs.io/ipfs/${activeProduct.imageUrl}`,
+            quantity: amount,
+          });
+        }
+
+        localStorage.setItem("cartItems", JSON.stringify(cartItems));
+
+        // Show success toast and popup
+        toast.success("Product added to cart!");
+        setPopupMessage("Product added to cart!");
+        setShowPopup(true);
+
+        // Hide the popup after 3 seconds
+        setTimeout(() => {
+          setShowPopup(false);
+        }, 3000);
+      } catch (error) {
+        toast.error("Failed to add item to cart");
+      } finally {
+        setIsLoading(false); // Reset loading state
       }
-
-      localStorage.setItem("cartItems", JSON.stringify(cartItems));
-
-      // Show success toast and popup
-      toast.success("Product added to cart!");
-      setPopupMessage("Product added to cart!");
-      setShowPopup(true);
-
-      // Hide the popup after 3 seconds
-      setTimeout(() => {
-        setShowPopup(false);
-      }, 3000);
     }
   };
 
@@ -177,7 +187,7 @@ const SideTableProducts = () => {
         productId: activeProduct.id,
         name: activeProduct.name,
         price: Number(activeProduct.price),
-        image: activeProduct.imageUrl,
+        image: `https://ipfs.io/ipfs/${activeProduct.imageUrl}`,
         quantity: amount,
       });
       localStorage.setItem("cartItems", JSON.stringify(cartItems));
@@ -205,7 +215,7 @@ const SideTableProducts = () => {
           name: activeProduct.name,
           quantity: amount,
           price: Number(activeProduct.price),
-          image: activeProduct.imageUrl,
+          image: `https://ipfs.io/ipfs/${activeProduct.imageUrl}`,
         },
       ],
       totalAmount: (Number(activeProduct.price) * amount).toFixed(2),
@@ -291,9 +301,38 @@ const SideTableProducts = () => {
               <div className="flex w-full gap-2">
                 <button
                   onClick={handleAddToCart}
-                  className="bg-black h-10 w-1/4 min-w-40 text-white py-2 px-4 rounded-xl text-lg"
+                  disabled={isLoading}
+                  className={`bg-black text-white py-2 px-6 rounded-xl flex items-center justify-center ${
+                    isLoading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
                 >
-                  Add to Cart
+                  {isLoading ? (
+                    <>
+                      <svg
+                        className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        />
+                      </svg>
+                      Adding...
+                    </>
+                  ) : (
+                    "Add to Cart"
+                  )}
                 </button>
                 {/* Popup for product added notification */}
                 {showPopup && (
@@ -303,7 +342,7 @@ const SideTableProducts = () => {
                 )}
                 <button
                   onClick={handleBuyNow}
-                  className="bg-black h-10 w-1/4 min-w-40 text-white py-2 px-6 rounded-xl text-lg"
+                  className="bg-black text-white py-2 px-6 rounded-xl flex items-center justify-center"
                 >
                   Buy Now
                 </button>

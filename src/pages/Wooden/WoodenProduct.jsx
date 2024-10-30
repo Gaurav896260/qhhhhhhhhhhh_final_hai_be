@@ -6,12 +6,12 @@ import Navbar from "../../components/Navbar/Navbar.jsx";
 import Footer from "../../components/Footer/Footer.jsx";
 import { useDispatch, useSelector } from "react-redux";
 
-import imageW1 from '../../assets/Front/acaciacandle.jpg';
-import imageW2 from '../../assets/Front/acaciaside.jpg';
-import imageW3 from '../../assets/Front/acaciabowl4.jpg';
-import imageW4 from '../../assets/Front/acaciabowl1.jpg';
-import imageW5 from '../../assets/Front/acaciabowl2.jpg';
-import imageW6 from '../../assets/Front/acaciabowl3.jpg';
+import imageW1 from "../../assets/Front/acaciacandle.jpg";
+import imageW2 from "../../assets/Front/acaciaside.jpg";
+import imageW3 from "../../assets/Front/acaciabowl4.jpg";
+import imageW4 from "../../assets/Front/acaciabowl1.jpg";
+import imageW5 from "../../assets/Front/acaciabowl2.jpg";
+import imageW6 from "../../assets/Front/acaciabowl3.jpg";
 
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -19,15 +19,50 @@ import "aos/dist/aos.css";
 const WoodenCollection = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [activeProduct, setActiveProduct] = useState(null);
-  const userInfo = useSelector((state) => state.auth.userInfo);
-
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
   const products = [
-    { id: "acacia-wood-candle-holder", name: "ACACIA WOOD CANDLE HOLDER", image: imageW1, originalPrice: 3200, discountedPrice: 250 },
-    { id: "acacia-wood-side-table", name: "ACACIA WOOD SIDE TABLE", image: imageW2, originalPrice: 9500, discountedPrice: 250 },
-    { id: "acacia-wood-bowl-i", name: "ACACIA WOOD BOWL-I", image: imageW3, originalPrice: 1400, discountedPrice: 250 },
-    { id: "acacia-circular-wood-bowl-and-spoon-set", name: "ACACIA CIRCULAR WOOD BOWL & SPOON SET", image: imageW4, originalPrice: 550, discountedPrice: 250 },
-    { id: "acacia-wood-bowl-and-serve-set", name: "ACACIA WOOD BOWL & SERVE SET", image: imageW5, originalPrice: 2300, discountedPrice: 250 },
-    { id: "acacia-wood-bowl-ii", name: "ACACIA WOOD BOWL-II", image: imageW6, originalPrice: 1400, discountedPrice: 250 }
+    {
+      id: "acacia-wood-candle-holder",
+      name: "ACACIA WOOD CANDLE HOLDER",
+      image: imageW1,
+      originalPrice: 3200,
+      discountedPrice: 250,
+    },
+    {
+      id: "acacia-wood-side-table",
+      name: "ACACIA WOOD SIDE TABLE",
+      image: imageW2,
+      originalPrice: 9500,
+      discountedPrice: 250,
+    },
+    {
+      id: "acacia-wood-bowl-i",
+      name: "ACACIA WOOD BOWL-I",
+      image: imageW3,
+      originalPrice: 1400,
+      discountedPrice: 250,
+    },
+    {
+      id: "acacia-circular-wood-bowl-and-spoon-set",
+      name: "ACACIA CIRCULAR WOOD BOWL & SPOON SET",
+      image: imageW4,
+      originalPrice: 550,
+      discountedPrice: 250,
+    },
+    {
+      id: "acacia-wood-bowl-and-serve-set",
+      name: "ACACIA WOOD BOWL & SERVE SET",
+      image: imageW5,
+      originalPrice: 2300,
+      discountedPrice: 250,
+    },
+    {
+      id: "acacia-wood-bowl-ii",
+      name: "ACACIA WOOD BOWL-II",
+      image: imageW6,
+      originalPrice: 1400,
+      discountedPrice: 250,
+    },
   ];
 
   const navigate = useNavigate();
@@ -157,7 +192,9 @@ const WoodenCollection = () => {
   return (
     <div className="bg-white dark:bg-gray-900 dark:text-white min-h-screen">
       <Navbar />
-      <h1 className="text-center text-2xl font-normal font-montserrat mt-4">WOODEN COLLECTION</h1>
+      <h1 className="text-center text-2xl font-normal font-montserrat mt-4">
+        WOODEN COLLECTION
+      </h1>
       <div className="container mx-auto px-5 py-10">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-10">
           {products.map((product) => (

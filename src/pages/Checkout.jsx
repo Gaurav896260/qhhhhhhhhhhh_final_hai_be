@@ -355,9 +355,9 @@ const Checkout = () => {
                     className="flex items-center border-b border-gray-200 py-4"
                   >
                     <img
-                      src={imageUrl}
+                      src={item.image}
                       alt={item.name}
-                      className="w-20 h-20 object-cover mr-4 rounded-md"
+                      className="w-24 h-24 object-cover mr-6 rounded-md"
                     />
                     <div className="flex-1">
                       <h3 className="text-lg font-semibold text-gray-800">

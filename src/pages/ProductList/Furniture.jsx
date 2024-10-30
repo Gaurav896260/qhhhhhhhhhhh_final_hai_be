@@ -21,12 +21,48 @@ const SideTable = () => {
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
   const products = [
-    { id: "virgo-side-table", name: "VIRGO SIDE TABLE", image: image1, originalPrice: 9500, discountedPrice: 250 },
-    { id: "orbit-side-table", name: "ORBIT SIDE TABLE", image: image2, originalPrice: 7700, discountedPrice: 250 },
-    { id: "pluto-side-table", name: "PLUTO SIDE TABLE", image: image3, originalPrice: 9500, discountedPrice: 250 },
-    { id: "vega-side-table", name: "VEGA SIDE TABLE", image: image4, originalPrice: 9500, discountedPrice: 250 },
-    { id: "acacia-wood-side-table", name: "ACACIA WOOD SIDE TABLE", image: image5, originalPrice: 9500, discountedPrice: 250 },
-    { id: "the-cosmic-mirror-side-table", name: "THE COSMIC MIRROR SIDE TABLE", image: image6, originalPrice: 25000, discountedPrice: 250 }, 
+    {
+      id: "virgo-side-table",
+      name: "VIRGO SIDE TABLE",
+      image: image1,
+      originalPrice: 9500,
+      discountedPrice: 250,
+    },
+    {
+      id: "orbit-side-table",
+      name: "ORBIT SIDE TABLE",
+      image: image2,
+      originalPrice: 7700,
+      discountedPrice: 250,
+    },
+    {
+      id: "pluto-side-table",
+      name: "PLUTO SIDE TABLE",
+      image: image3,
+      originalPrice: 9500,
+      discountedPrice: 250,
+    },
+    {
+      id: "vega-side-table",
+      name: "VEGA SIDE TABLE",
+      image: image4,
+      originalPrice: 9500,
+      discountedPrice: 250,
+    },
+    {
+      id: "acacia-wood-side-table",
+      name: "ACACIA WOOD SIDE TABLE",
+      image: image5,
+      originalPrice: 9500,
+      discountedPrice: 250,
+    },
+    {
+      id: "the-cosmic-mirror-side-table",
+      name: "THE COSMIC MIRROR SIDE TABLE",
+      image: image6,
+      originalPrice: 25000,
+      discountedPrice: 250,
+    },
   ];
 
   const navigate = useNavigate();
@@ -91,7 +127,7 @@ const SideTable = () => {
             productId: product.id,
             name: product.name,
             price: Number(product.originalPrice),
-            image: product.image,
+            image: `https://ipfs.io/ipfs/${product.imageUrl}`,
             quantity: 1,
           }),
         }
@@ -129,7 +165,9 @@ const SideTable = () => {
   return (
     <div className="bg-white dark:bg-gray-900 dark:text-white min-h-screen">
       <Navbar />
-      <h1 className="text-center text-2xl font-normal font-montserrat mt-4">FURNITURE</h1>
+      <h1 className="text-center text-2xl font-normal font-montserrat mt-4">
+        FURNITURE
+      </h1>
       <div className="container mx-auto px-5 py-10">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-10">
           {products.map((product) => (

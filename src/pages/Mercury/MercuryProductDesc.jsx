@@ -17,8 +17,6 @@ import image22 from "../../assets/Lifestyle/MercuryCone/mcone2.jpg";
 import image23 from "../../assets/Lifestyle/MercuryCone/mcone3.jpeg";
 import image24 from "../../assets/Lifestyle/MercuryCone/mcone4.jpg";
 
-
-
 import imageM1 from "../../assets/Front/mercuryvase.jpg";
 import imageM2 from "../../assets//Front/mercuryplanter.jpg";
 
@@ -161,7 +159,7 @@ const MercuryProductDesc = () => {
               productId: activeProduct.id,
               name: activeProduct.name,
               price: Number(activeProduct.price),
-              image: activeProduct.imageUrl,
+              image: `https://ipfs.io/ipfs/${activeProduct.imageUrl}`,
               quantity: amount,
             }),
           }
@@ -200,7 +198,7 @@ const MercuryProductDesc = () => {
           productId: activeProduct.id,
           name: activeProduct.name,
           price: Number(activeProduct.price),
-          image: activeProduct.imageUrl,
+          image: `https://ipfs.io/ipfs/${activeProduct.imageUrl}`,
           quantity: amount,
         });
       }
@@ -227,7 +225,7 @@ const MercuryProductDesc = () => {
         productId: activeProduct.id,
         name: activeProduct.name,
         price: Number(activeProduct.price),
-        image: activeProduct.imageUrl,
+        image: `https://ipfs.io/ipfs/${activeProduct.imageUrl}`,
         quantity: amount,
       });
       localStorage.setItem("cartItems", JSON.stringify(cartItems));
@@ -255,7 +253,7 @@ const MercuryProductDesc = () => {
           name: activeProduct.name,
           quantity: amount,
           price: Number(activeProduct.price),
-          image: activeProduct.imageUrl,
+          image: `https://ipfs.io/ipfs/${activeProduct.imageUrl}`,
         },
       ],
       totalAmount: (Number(activeProduct.price) * amount).toFixed(2),

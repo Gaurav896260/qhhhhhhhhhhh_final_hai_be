@@ -5,8 +5,6 @@ const OrderConfirmationModal = ({ isOpen, onClose, orderDetails }) => {
   const navigate = useNavigate();
 
   if (!isOpen) return null;
-
-  // Extract order from orderDetails
   const order = orderDetails.order;
 
   if (!order) {
@@ -34,7 +32,7 @@ const OrderConfirmationModal = ({ isOpen, onClose, orderDetails }) => {
   };
 
   const formatPrice = (price) => {
-    return (price / 100).toLocaleString("en-IN", {
+    return price.toLocaleString("en-IN", {
       style: "currency",
       currency: "INR",
     });
@@ -97,7 +95,7 @@ const OrderConfirmationModal = ({ isOpen, onClose, orderDetails }) => {
                   <div key={product._id} className="flex items-center gap-4">
                     <div className="w-16 h-16 bg-gray-100 rounded flex items-center justify-center">
                       <img
-                        src={`https://ipfs.io/ipfs/${product.image}`}
+                        src={product.image}
                         alt={product.name}
                         className="max-w-full max-h-full object-contain"
                       />

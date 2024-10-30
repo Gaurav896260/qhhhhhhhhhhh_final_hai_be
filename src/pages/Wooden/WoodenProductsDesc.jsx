@@ -261,7 +261,7 @@ const WoodenProductDesc = () => {
               productId: activeProduct.id,
               name: activeProduct.name,
               price: Number(activeProduct.price),
-              image: activeProduct.imageUrl,
+              image: `https://ipfs.io/ipfs/${activeProduct.imageUrl}`,
               quantity: amount,
             }),
           }
@@ -300,7 +300,7 @@ const WoodenProductDesc = () => {
           productId: activeProduct.id,
           name: activeProduct.name,
           price: Number(activeProduct.price),
-          image: activeProduct.imageUrl,
+          image: `https://ipfs.io/ipfs/${activeProduct.imageUrl}`,
           quantity: amount,
         });
       }
@@ -327,7 +327,7 @@ const WoodenProductDesc = () => {
         productId: activeProduct.id,
         name: activeProduct.name,
         price: Number(activeProduct.price),
-        image: activeProduct.imageUrl,
+        image: `https://ipfs.io/ipfs/${activeProduct.imageUrl}`,
         quantity: amount,
       });
       localStorage.setItem("cartItems", JSON.stringify(cartItems));
@@ -355,7 +355,7 @@ const WoodenProductDesc = () => {
           name: activeProduct.name,
           quantity: amount,
           price: Number(activeProduct.price),
-          image: activeProduct.imageUrl,
+          image: `https://ipfs.io/ipfs/${activeProduct.imageUrl}`,
         },
       ],
       totalAmount: (Number(activeProduct.price) * amount).toFixed(2),
